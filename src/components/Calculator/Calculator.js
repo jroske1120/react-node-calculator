@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import axios from 'axios';
+import axios from "axios";
 
 class Calculator extends Component {
   state = {
@@ -11,30 +11,34 @@ class Calculator extends Component {
     calculation: [],
   };
 
-  componentDidMount(){
-    axios.get('/api/calculator')
+  componentDidMount() {
+    this.fetchHistory();
   }
   fetchHistory = () => {
-    axios.get('/api/calculator')
-        .then((response) => {
-            this.setState({
-                ...this.state,
-                calculation: response.data
-            })
-        }).catch((error) => {
-            console.log(error)
-        })
-}
-  addCalculation = (firstVal, operator, secondVal) =>{
-    console.log('sending calculation', `${firstVal} ${operator} ${secondVal}`)
-    axios.post('/api/calculator', {...this.state})
-    .then((response) => {
-        console.log(response)
-        this.fetchHistory();
-    }).catch((error) => {
+    axios
+      .get("/api/calculator")
+      .then((response) => {
+        this.setState({
+          // ...this.state,
+          calculation: response.data,
+        });
+      })
+      .catch((error) => {
         console.log(error);
-    })
-  }
+      });
+  };
+  addCalculation = (firstVal, operator, secondVal) => {
+    console.log("sending calculation", `${firstVal} ${operator} ${secondVal}`);
+    axios
+      .post("/api/calculator", { ...this.state })
+      .then((response) => {
+        console.log(response);
+        this.fetchHistory();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   handleClick = (index) => {
     console.log("clicked", this.state.displayValue);
     const { displayValue, operator, firstVal, secondVal, nextVal } = this.state;
@@ -95,7 +99,7 @@ class Calculator extends Component {
         break;
       case "=":
         //call POST to server
-        this.addCalculation(firstVal, operator, secondVal)
+        this.addCalculation(firstVal, operator, secondVal);
         console.log(this.state);
         this.setState({
           displayValue: "0",
@@ -123,8 +127,8 @@ class Calculator extends Component {
           displayValue: length === 1 ? "0" : backspace,
         });
         break;
-        default:
-            return this.state;
+      default:
+        return this.state;
     }
   };
 
@@ -172,6 +176,11 @@ class Calculator extends Component {
               <br />
             </div>
           </div>
+          <ul>
+            {this.state.calculation.map((calc) => (
+              <li key={calc.id}>{calc.calculation}</li>
+            ))}
+          </ul>
         </div>
       </>
     );
