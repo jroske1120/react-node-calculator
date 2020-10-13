@@ -24,7 +24,6 @@ class Calculator extends Component {
       .get("/api/calculator")
       .then((response) => {
         this.setState({
-          // ...this.state,
           calculation: response.data,
         });
       })
@@ -34,11 +33,9 @@ class Calculator extends Component {
   };
 
   addCalculation = (firstVal, operator, secondVal) => {
-    console.log("sending calculation", `${firstVal} ${operator} ${secondVal}`);
     axios
       .post("/api/calculator", { ...this.state })
       .then((response) => {
-        console.log(response);
         this.fetchHistory();
       })
       .catch((error) => {
@@ -81,22 +78,20 @@ class Calculator extends Component {
       case "x":
       case "/":
         //This sets the operator, as well as prevent two operators from being entered
-        if (!operator) {
-          this.setState({
-            operator: index,
-            nextVal: true,
-            displayValue:
-              (operator !== null
-                ? // This allows the operator to be changed
-                  displayValue.substr(0, displayValue.length - 1)
-                : displayValue) + index,
-          });
-        }
+        this.setState({
+          operator: index,
+          nextVal: true,
+          displayValue:
+            (operator !== null
+              ? // This allows the operator to be changed
+                displayValue.substr(0, displayValue.length - 1)
+              : displayValue) + index,
+        });
         break;
 
       case ".":
         //This adds decimal to a value and prevents multiple decimals
-        if (!displayValue.includes(".")) {
+        if ((!firstVal.includes(".") && !nextVal) || (!secondVal.includes(".") && nextVal ) ) {
           let decimal = displayValue.slice(-1); //gets last character
           this.setState({
             displayValue: decimal !== "." ? displayValue + index : displayValue,
@@ -112,16 +107,19 @@ class Calculator extends Component {
           }
         }
         break;
+
       case "=":
         //sends values to server to be calculated, and resets state
-        this.addCalculation(firstVal, operator, secondVal);
-        this.setState({
-          displayValue: "0",
-          operator: null,
-          firstVal: "",
-          secondVal: "",
-          nextVal: false,
-        });
+        if (operator && firstVal !== "" && secondVal !== "") {
+          this.addCalculation(firstVal, operator, secondVal);
+          this.setState({
+            displayValue: "0",
+            operator: null,
+            firstVal: "",
+            secondVal: "",
+            nextVal: false,
+          });
+        }
         break;
       case "CLEAR":
         //This resets state
@@ -137,7 +135,8 @@ class Calculator extends Component {
       case "DELETE":
         //This removes the last char from display
         this.setState({
-          displayValue: displayValue.slice(0, -1),
+          displayValue:
+            displayValue.length < 2 ? "0" : displayValue.slice(0, -1),
         });
         if (!nextVal) {
           this.setState({
@@ -177,7 +176,7 @@ class Calculator extends Component {
     return (
       <>
         <div>
-          <h1>Calculator</h1>
+          <h1>Joel's Calculator</h1>
           <div style={styles.calculatorContainer}>
             <div style={styles.calcInput}>{this.state.displayValue}</div>
             <div style={styles.numberContainer}>
@@ -239,7 +238,7 @@ const styles = {
     border: "4px groove gray",
     backgroundColor: "#2e465d",
     padding: "25px 0px 50px 0px",
-    borderRadius: "5px",
+    borderRadius: "10px",
     margin: "auto",
     width: "300px",
     minWidth: "200px",

@@ -25,7 +25,7 @@ router.post("/", (req, res) => {
   };
   let queryText = `INSERT INTO "history" ("calculation") VALUES ($1);`;
   pool
-    .query(queryText, [calculation + " = " + solution().toFixed(2)])
+    .query(queryText, [calculation + " = " + solution().toFixed(1)])
     .then((result) => {
       res.sendStatus(200);
     })
