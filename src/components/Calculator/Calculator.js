@@ -9,11 +9,13 @@ class Calculator extends Component {
     secondVal: "",
     nextVal: false,
     calculation: [],
+    allowDecimal: true,
   };
 
   componentDidMount() {
     this.fetchHistory();
   }
+
   fetchHistory = () => {
     axios
       .get("/api/calculator")
@@ -27,6 +29,7 @@ class Calculator extends Component {
         console.log(error);
       });
   };
+
   addCalculation = (firstVal, operator, secondVal) => {
     console.log("sending calculation", `${firstVal} ${operator} ${secondVal}`);
     axios
@@ -39,8 +42,8 @@ class Calculator extends Component {
         console.log(error);
       });
   };
+
   handleClick = (index) => {
-    console.log("clicked", this.state.displayValue);
     const { displayValue, operator, firstVal, secondVal, nextVal } = this.state;
 
     switch (index) {
@@ -83,6 +86,7 @@ class Calculator extends Component {
 
       case ".":
         //return to prevent double decimals like 4.4.4
+        if(!displayValue.includes('.')){
         let decimal = displayValue.slice(-1); //gets last character
         this.setState({
           displayValue: decimal !== "." ? displayValue + index : displayValue,
@@ -95,7 +99,7 @@ class Calculator extends Component {
           this.setState({
             secondVal: secondVal + index,
           });
-        }
+        }}
         break;
       case "=":
         //call POST to server
@@ -157,7 +161,7 @@ class Calculator extends Component {
           <h2>Calculator</h2>
           <div style={styles.calculatorContainer}>
             <h4 style={styles.calculatorTitle}>
-              JOEL <span style={styles.model}>SZL-2020</span>
+              JOEL <span style={styles.model}>SEZZLE-2020</span>
             </h4>
             <div style={styles.calcInput}>{this.state.displayValue}</div>
             <div style={styles.numberContainer}>
@@ -212,7 +216,7 @@ const styles = {
     textAlign: "center",
   },
   calculatorContainer: {
-    border: "2px solid #000000",
+    border: "4px solid #000000",
     backgroundColor: "#434b60",
     padding: "25px 0px 50px 0px",
     borderRadius: "5px",
@@ -228,13 +232,13 @@ const styles = {
     border: "1.5px groove #2a2a38",
     borderRadius: "5px",
     color: "white",
-    fontSize: "20px",
+    fontSize: "30px",
   },
   largeButton: {
     margin: "3px 4px",
     padding: "5px 20px",
     width: "135px",
-    backgroundColor: "#9897a4",
+    backgroundColor: "#b07080",
     border: "1.5px groove #2a2a38",
     borderRadius: "5px",
     color: "white",
