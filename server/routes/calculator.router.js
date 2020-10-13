@@ -4,9 +4,11 @@ const router = express.Router();
 
 router.post("/", (req, res) => {
   let info = req.body;
+  //Convert values to numbers for calculating
   let num1 = Number(info.firstVal);
   let num2 = Number(info.secondVal);
-  let calculation = info.firstVal + " " + info.operator + " " + info.secondVal;
+  //Send calculation elements and solution to db
+  let calculation = `${info.firstVal} ${info.operator} ${info.secondVal}`;
   let solution = () => {
     switch (info.operator) {
       case "+":
@@ -23,7 +25,7 @@ router.post("/", (req, res) => {
   };
   let queryText = `INSERT INTO "history" ("calculation") VALUES ($1);`;
   pool
-    .query(queryText, [calculation + " = " + solution().toFixed(1)])
+    .query(queryText, [calculation + " = " + solution().toFixed(2)])
     .then((result) => {
       res.sendStatus(200);
     })
