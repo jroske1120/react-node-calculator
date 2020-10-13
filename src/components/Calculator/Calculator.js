@@ -176,6 +176,7 @@ class Calculator extends Component {
     return (
       <>
         <div>
+          <center>
           <h1>Joel's Calculator</h1>
           <div style={styles.calculatorContainer}>
             <div style={styles.calcInput}>{this.state.displayValue}</div>
@@ -206,12 +207,15 @@ class Calculator extends Component {
           </div>
           <div>
             <h1>Past 10 Calculations</h1>
-            <ul>
+            <ul 
+                  style={styles.history}
+                  >
               {this.state.calculation.map((calc) => (
                 <li key={calc.id}>{calc.calculation}</li>
               ))}
             </ul>
           </div>
+          </center>
         </div>
       </>
     );
@@ -228,7 +232,7 @@ const styles = {
     fontSize: "25px",
     textAlign: "right",
     alignItems: "center",
-    margin: "13px",
+    margin: "5px 13px",
     backgroundColor: "white",
   },
   numberContainer: {
@@ -236,9 +240,9 @@ const styles = {
   },
   calculatorContainer: {
     border: "4px groove gray",
-    backgroundColor: "#2e465d",
-    padding: "25px 0px 50px 0px",
-    borderRadius: "10px",
+    backgroundColor: "#352655",
+    padding: "25px 0px 30px",
+    borderRadius: "20px",
     margin: "auto",
     width: "300px",
     minWidth: "200px",
@@ -247,10 +251,10 @@ const styles = {
     margin: "6px 4px",
     padding: "15px 40px 15px 20px",
     width: "2.8%",
-    backgroundColor: "black",
+    backgroundColor: "#61bfa5",
     border: "1px groove gray",
-    borderRadius: "5px",
-    color: "white",
+    borderRadius: "10px",
+    color: "#352655",
     fontSize: "30px",
     fontWeight: "bold",
   },
@@ -258,12 +262,15 @@ const styles = {
     margin: "3px 4px",
     padding: "5px 20px",
     width: "135px",
-    backgroundColor: "#aa2365",
+    backgroundColor: "#d96976",
     border: "1px groove gray",
     borderRadius: "5px",
-    color: "white",
+    color: "#352655",
     fontSize: "20px",
     fontWeight: "bold",
   },
+  history: {
+    listStyle: "none",
+  }
 };
 export default Calculator;
