@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import axios from 'axios';
 
 class Calculator extends Component {
   state = {
@@ -7,11 +8,32 @@ class Calculator extends Component {
     firstVal: "",
     secondVal: "",
     nextVal: false,
+    calculation: [],
   };
 
+  componentDidMount(){
+    axios.get('/api/calculator')
+  }
+  fetchHistory = () => {
+    axios.get('/api/calculator')
+        .then((response) => {
+            this.setState({
+                ...this.state,
+                calculation: response.data
+            })
+        }).catch((error) => {
+            console.log(error)
+        })
+}
   addCalculation = (firstVal, operator, secondVal) =>{
     console.log('sending calculation', `${firstVal} ${operator} ${secondVal}`)
-
+    axios.post('/api/calculator', {...this.state})
+    .then((response) => {
+        console.log(response)
+        this.fetchHistory();
+    }).catch((error) => {
+        console.log(error);
+    })
   }
   handleClick = (index) => {
     console.log("clicked", this.state.displayValue);
@@ -101,6 +123,8 @@ class Calculator extends Component {
           displayValue: length === 1 ? "0" : backspace,
         });
         break;
+        default:
+            return this.state;
     }
   };
 
